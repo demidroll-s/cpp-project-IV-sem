@@ -3,6 +3,8 @@
 #include <string.h>
 #include "types.h"
 
+const int MAX_YEAR = 2100;
+
 using namespace std;
 
 class Money
@@ -173,17 +175,86 @@ ostream& operator<<(ostream& os, const Money &money)
 
 /////////////////////////////////////////////////////////////
 
+int day_in_month(int month, int year)
+{
+    int day = 0;
+    switch (month)
+    {
+    case 1:
+        day = 31; 
+        break;
+    case 3:
+        day = 31; 
+        break;
+    case 5:
+        day + 31; 
+        break;
+    case 7:
+        day = 31; 
+        break;
+    case 8:
+        day = 31; 
+        break;
+    case 10:
+        day += 31; 
+        break;
+    case 12:
+        day = 31; 
+        break;
+    case 4:
+        day = 30; 
+        break;
+    case 6:
+        day = 30; 
+        break;
+    case 9:
+        day = 30; 
+        break;
+    case 11:
+        day = 30; 
+        break;
+    case 2:
+        if ((((year % 4) == 0) && ((year % 100) != 0)) || ((year % 400) == 0))
+                day = 29;
+            else
+                day = 28;
+    default:
+        break;
+    }
+    return day;
+}
+
+
 class Date
 {
     unsigned int year;
     unsigned int month;
     unsigned int day;
 public:
-    Date(unsigned int day, unsigned int month, unsigned int year)
+    Date(int day, int month, int year)
     {
-        this->year = year;
-        this->month = month;
-        this->day = day;
+        if((year < 0) || (year > MAX_YEAR))
+        {
+            cout << "Wrong format for year!" << endl;
+            exit(-1);
+        }  
+        else
+            this->year = (unsigned int)year;
+
+        if ((month < 1) || (month > 12))
+        {
+            cout << "Wrong format for month!" << endl;
+            exit(-1);
+        }
+        else
+        this->month = (unsigned int)month;
+        if ((day < 0) || (day > day_in_month(month, year)))
+        {
+            cout << "Wrong format for day!" << endl;
+            exit(-1);
+        }
+        else
+            this->day = (unsigned int)day;
     }
     void set_day(unsigned int day);
     void set_month(unsigned int month);
@@ -240,51 +311,9 @@ long int Date::full_day()
     int d_t_now = 0;
     for (int i = month - 1; i > 0; i--)
     {
-        switch (i)
-        {
-        case 1:
-            d_t_now += 31; 
-            break;
-        case 3:
-            d_t_now += 31; 
-            break;
-        case 5:
-            d_t_now += 31; 
-            break;
-        case 7:
-            d_t_now += 31; 
-            break;
-        case 8:
-            d_t_now += 31; 
-            break;
-        case 10:
-            d_t_now += 31; 
-            break;
-        case 12:
-            d_t_now += 31; 
-            break;
-        case 4:
-            d_t_now += 30; 
-            break;
-        case 6:
-            d_t_now += 30; 
-            break;
-        case 9:
-            d_t_now += 30; 
-            break;
-        case 11:
-            d_t_now += 30; 
-            break;
-        case 2:
-            if ((((year % 4) == 0) && ((year % 100) != 0)) || ((year % 400) == 0))
-                    d_t_now += 29;
-            else
-                d_t_now += 28;
-        default:
-            break;
-        }
+        d_t_now += day_in_month(i, year);
     }
-    cout << bissextile << " " << d_t_now << " "<< day << endl;
+    cout << bissextile << " " << d_t_now << " " << day << endl;
     return year * 365 + bissextile + d_t_now + day;
 }
 
