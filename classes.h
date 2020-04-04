@@ -1,7 +1,7 @@
 #include <iostream>
 #include <math.h>
 #include <string.h>
-#include "example.h"
+#include "types.h"
 
 using namespace std;
 
@@ -172,6 +172,177 @@ ostream& operator<<(ostream& os, const Money &money)
 }
 
 /////////////////////////////////////////////////////////////
+
+class Date
+{
+    unsigned int year;
+    unsigned int month;
+    unsigned int day;
+public:
+    Date(unsigned int day, unsigned int month, unsigned int year)
+    {
+        this->year = year;
+        this->month = month;
+        this->day = day;
+    }
+    void set_day(unsigned int day);
+    void set_month(unsigned int month);
+    void set_year(unsigned int year);
+    
+    unsigned int get_day();
+    unsigned int get_month();
+    unsigned int get_year();
+
+    long int full_day();
+
+    friend unsigned long operator-(Date &A, Date &B);
+
+    friend bool operator==(Date &A, Date &B);
+    friend bool operator!=(Date &A, Date &B);
+    friend bool operator>(Date &A, Date &B);
+    friend bool operator<(Date &A, Date &B);
+    friend ostream& operator<<(ostream& os, const Date &date);
+};
+
+void Date::set_day(unsigned int day)
+{
+    this->day = day;
+}
+
+void Date::set_month(unsigned int month)
+{
+    this->month = month;
+}
+
+void Date::set_year(unsigned int year)
+{
+    this->year = year;
+}
+
+unsigned int Date::get_day()
+{
+    return day;
+}
+
+unsigned int Date::get_month()
+{
+    return month;
+}
+
+unsigned int Date::get_year()
+{
+    return year;
+}
+
+long int Date::full_day()
+{
+    int bissextile =  ((year - 1) / 4) - ((year - 1) / 100) + ((year - 1) / 400) + 1;
+    int d_t_now = 0;
+    for (int i = month - 1; i > 0; i--)
+    {
+        switch (i)
+        {
+        case 1:
+            d_t_now += 31; 
+            break;
+        case 3:
+            d_t_now += 31; 
+            break;
+        case 5:
+            d_t_now += 31; 
+            break;
+        case 7:
+            d_t_now += 31; 
+            break;
+        case 8:
+            d_t_now += 31; 
+            break;
+        case 10:
+            d_t_now += 31; 
+            break;
+        case 12:
+            d_t_now += 31; 
+            break;
+        case 4:
+            d_t_now += 30; 
+            break;
+        case 6:
+            d_t_now += 30; 
+            break;
+        case 9:
+            d_t_now += 30; 
+            break;
+        case 11:
+            d_t_now += 30; 
+            break;
+        case 2:
+            if ((((year % 4) == 0) && ((year % 100) != 0)) || ((year % 400) == 0))
+                    d_t_now += 29;
+            else
+                d_t_now += 28;
+        default:
+            break;
+        }
+    }
+    cout << bissextile << " " << d_t_now << " "<< day << endl;
+    return year * 365 + bissextile + d_t_now + day;
+}
+
+unsigned long operator-(Date &A, Date &B)
+{
+    long int d = A.full_day() - B.full_day();
+    if (d >= 0)
+        return d;
+    return -1;
+}
+
+bool operator==(Date &A, Date &B)
+{
+    if(A.full_day() == B.full_day())
+        return true;
+    return false;
+}
+
+bool operator!=(Date &A, Date &B)
+{
+    if(A.full_day() != B.full_day())
+        return true;
+    return false;
+}
+
+bool operator<(Date &A, Date &B)
+{
+    if(A.full_day() < B.full_day())
+        return true;
+    return false;
+}
+
+bool operator>(Date &A, Date &B)
+{
+    if(A.full_day() > B.full_day())
+        return true;
+    return false;
+}
+
+ostream& operator<<(ostream& os, const Date &date)
+{
+    if(date.day < 10)
+        os << "0";
+    os << date.day << ".";
+    if(date.month < 10)
+        os << "0";
+    os << date.month << ".";
+    if(date.year < 1000)
+        os << "0";
+    if(date.year < 100)
+        os << "0";
+    if(date.year < 10)
+        os << "0";
+    os << date.year << endl;
+    return os;
+}
+
+////////////////////////////////////////////////////////////
 
 class IEH
 {
