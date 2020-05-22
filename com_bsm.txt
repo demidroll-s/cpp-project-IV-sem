@@ -1,0 +1,4 @@
+0
+2 make
+7 python3 stocks.py
+7 python3 stocks-gif.py
